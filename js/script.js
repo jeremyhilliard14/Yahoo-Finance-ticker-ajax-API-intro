@@ -1,15 +1,40 @@
 $(document).ready(function(){
 
-	$(function () {
-		$('.footable').footable();
-		// addSpecialClasses();
-		// console.log(addSpecialClasses());
-	});
+	// $(function () {
+	// 	$('.footable').footable();
+	// 	// addSpecialClasses();
+	// 	// console.log(addSpecialClasses());
+	// });
+	
+    $('#data-table').DataTable();
+    $('#data-table').dataTable( {
+          "sPaginationType": "scrolling"
+      } );
+});
 
 	$('#ticker-search').submit(function(){
 		var ticker = $('#symbol').val();
 		var url = 'http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in%20("' + ticker + '")%0A%09%09&env=http%3A%2F%2Fdatatables.org%2Falltables.env&format=json';
 
+		// $('#data-table').DataTable();
+
+		 // $('#data-table').DataTable({
+   //          "ajax": {
+   //              "url": url // Path to api url
+   //              "dataSrc": "query.results.quote"
+   //          },
+   //          columns: [{
+   //              "data": "Name"
+   //          }, {
+   //              "data": "Symbol"
+   //          }, {
+   //              "data": "Ask"
+   //          }, {
+   //              "data": "Change"
+   //          }, {
+   //              "data": "DaysHigh"
+   //          }]
+   //      });
 		$.getJSON(url, function(yahooResult){
 			var stockInfo = yahooResult.query.results.quote;
 			var newHTML;
@@ -20,7 +45,7 @@ $(document).ready(function(){
 			}else{
 				newHTML = updateTable(stockInfo);
 			}
-
+			
 			$('#ticker-body').html(newHTML);
 			console.log(yahooResult);
 
@@ -28,10 +53,15 @@ $(document).ready(function(){
 				$('.footable').footable();
 			});
 			addSpecialClasses();
+
+			$('#ticker-body').html(_newHTML).trigger("footable_redraw");
  		});
 
 		event.preventDefault();
 	});
+
+	
+
 	function updateTable(thingToLoopThrough){
 		var thisStockRow = '<tr><td>' + thingToLoopThrough.Symbol + '</td>';
 		thisStockRow += '<td>' + thingToLoopThrough.Name + '</td>';
@@ -53,6 +83,6 @@ $(document).ready(function(){
 			}
 		});
 	}
-	
-});
+	// $('#table_id').DataTable();
+
 
